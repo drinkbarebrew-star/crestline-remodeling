@@ -1,0 +1,20 @@
+{
+  "name": "crestline-remodeling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static marketing website for Crestline Remodeling — design-build home remodeling in Highland Park, IL and Chicago's North Shore.",
+  "scripts": {
+    "build": "python3 generate.py",
+    "dev": "python3 -m http.server 3000 --directory public"
+  },
+  "keywords": [
+    "home-remodeling",
+    "kitchen-remodeling",
+    "bathroom-remodeling",
+    "highland-park",
+    "north-shore",
+    "design-build",
+    "static-site"
+  ],
+  "license": "UNLICENSED"
+}
