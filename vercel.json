@@ -7,16 +7,25 @@
     {
       "source": "/(.*)",
       "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
       ]
     },
     {
-      "source": "/(.*)\\.(css|js|jpg|jpeg|png|svg|webp|woff2)",
+      "source": "/(.*)\\.(css|js|jpg|jpeg|png|gif|svg|webp|avif|ico|woff|woff2|ttf|eot)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.crestlineremodeling.com" }],
+      "destination": "https://crestlineremodeling.com/:path*",
+      "permanent": true
     }
   ]
 }
