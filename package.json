@@ -4,7 +4,7 @@
   "private": true,
   "description": "Static marketing website for Crestline Remodeling — design-build home remodeling in Highland Park, IL and Chicago's North Shore.",
   "scripts": {
-    "build": "python3 generate.py",
+    "build": "echo 'Static site - no build needed'",
     "dev": "python3 -m http.server 3000 --directory public"
   },
   "keywords": [
