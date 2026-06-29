@@ -116,9 +116,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // ─── Form Validation ───────────────────────────────────────
+  // ─── Form Validation + AJAX Submission ──────────────────────
   document.querySelectorAll(".contact-form").forEach(function(form) {
     form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
       var valid = true;
       form.querySelectorAll("[required]").forEach(function(input) {
         if (!input.value.trim()) {
@@ -137,8 +139,50 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       }
       if (!valid) {
-        e.preventDefault();
+        return;
       }
+
+      var formData = new FormData(form);
+      var data = {};
+      formData.forEach(function(value, key) { data[key] = value; });
+
+      // Telegram notification (fires immediately for speed-to-lead)
+      fetch('https://api.telegram.org/bot8735044985:AAGPjuQD8t_FCgRCY_KcIm64BKs980WUQYo/sendMessage', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          chat_id: '7046304764',
+          text: '🔔 NEW LEAD - Crestline Remodeling\n\nName: ' + (data.name || '') + '\nPhone: ' + (data.phone || '') + '\nEmail: ' + (data.email || '') + '\nService: ' + (data.service || 'Not specified') + '\nMessage: ' + (data.message || '')
+        })
+      }).catch(function () {});
+
+      var submitBtn = form.querySelector("button[type=submit], input[type=submit]");
+      var originalText = submitBtn ? submitBtn.textContent : "";
+      if (submitBtn) { submitBtn.textContent = "Sending..."; submitBtn.disabled = true; }
+
+      function showSuccess() {
+        var existing = form.querySelector(".form-message");
+        if (existing) existing.remove();
+        var div = document.createElement("div");
+        div.className = "form-message";
+        div.style.cssText = "background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;padding:14px 20px;border-radius:6px;margin-top:16px;font-weight:500;";
+        div.innerHTML = "<strong>Thank you!</strong> Your request has been sent. We'll get back to you within one business day.";
+        form.appendChild(div);
+        form.reset();
+        div.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (submitBtn) { submitBtn.textContent = originalText; submitBtn.disabled = false; }
+      }
+
+      // Submit to Formspree (backup / email record)
+      fetch(form.action, {
+        method: "POST",
+        body: formData,
+        headers: { "Accept": "application/json" }
+      }).then(function () {
+        showSuccess();
+      }).catch(function () {
+        showSuccess();
+      });
     });
   });
 
